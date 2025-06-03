@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Timestamp Microservice</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Timestamp Microservice</h1>
+    <div class="usage">
+      <h2>Example Usage:</h2>
+      <p><a href="/api/2015-12-25">/api/2015-12-25</a></p>
+      <p><a href="/api/1451001600000">/api/1451001600000</a></p>
+      
+      <h2>Example Output:</h2>
+      <p><code>{"unix":1451001600000, "utc":"Fri, 25 Dec 2015 00:00:00 GMT"}</code></p>
+    </div>
+    
+    <div class="try-it">
+      <h2>Try it out:</h2>
+      <input type="text" id="dateInput" placeholder="Enter date or timestamp">
+      <button onclick="convertDate()">Convert</button>
+      <div id="result"></div>
+    </div>
+  </div>
+
+  <script>
+    async function convertDate() {
+      const input = document.getElementById('dateInput').value;
+      const resultDiv = document.getElementById('result');
+      
+      try {
+        const response = await fetch(`/api/${input}`);
+        const data = await response.json();
+        
+        if (data.error) {
+          resultDiv.innerHTML = `<p class="error">Error: ${data.error}</p>`;
+        } else {
+          resultDiv.innerHTML = `
+            <p><strong>Unix:</strong> ${data.unix}</p>
+            <p><strong>UTC:</strong> ${data.utc}</p>
+          `;
+        }
+      } catch (err) {
+        resultDiv.innerHTML = `<p class="error">Error: ${err.message}</p>`;
+      }
+    }
+  </script>
+</body>
+</html>
